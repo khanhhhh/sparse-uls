@@ -1,4 +1,4 @@
-# compressed-sensing
+# sparsest-solution-underdetermined-linear-system
 optimize norm with underdetermined system equality constraint
 
 ## problem statement
@@ -16,8 +16,8 @@ where   x \in R^n
 
 ### L2 norm sparsity
 
-![norm2](https://raw.githubusercontent.com/khanhhhh/compressed-sensing/main/assets/norm2.png)
+![norm2](https://raw.githubusercontent.com/khanhhhh/sparsest-uls/main/assets/norm2.png)
 
 ### L1 norm sparsity
 
-![norm1](https://raw.githubusercontent.com/khanhhhh/compressed-sensing/main/assets/norm1.png)
+![norm1](https://raw.githubusercontent.com/khanhhhh/sparsest-uls/main/assets/norm1.png)
