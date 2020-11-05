@@ -27,4 +27,6 @@ where   x \in R^n
 
 - https://pypi.org/project/sparse-uls/
 
+- https://packaging.python.org/tutorials/packaging-projects/
+
 - https://dzone.com/articles/executable-package-pip-install
