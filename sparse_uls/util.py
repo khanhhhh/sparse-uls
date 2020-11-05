@@ -1,8 +1,8 @@
-from typing import Tuple, Optional, Callable, Union, Iterator, Dict
+from typing import Tuple
 
 import numpy as np
-import torch
-
+import scipy as sp
+import scipy.optimize
 
 def linear_subspace(A: np.ndarray, b: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
     '''
@@ -11,6 +11,8 @@ def linear_subspace(A: np.ndarray, b: np.ndarray) -> Tuple[np.ndarray, np.ndarra
     '''
     # https://web.stanford.edu/~boyd/cvxbook/bv_cvxbook.pdf (page 682)
     # https://math.stackexchange.com/questions/1942211/does-negative-transpose-sign-mean-inverse-of-a-transposed-matrix-or-transpose-of
+    if len(A.shape) != 2 or len(b.shape) != 1:
+        raise Exception("A must be 2D, b must be 1D")
     p, n = A.shape
     Q, R = np.linalg.qr(A.T, mode="complete")
     Q1, Q2 = Q[:, 0:p], Q[:, p:n]
@@ -19,25 +21,25 @@ def linear_subspace(A: np.ndarray, b: np.ndarray) -> Tuple[np.ndarray, np.ndarra
     return x_, Q2
 
 
-def lbfgs_optimizer(
-        lr: float = 1,
-        max_iter: int = 20,
-        max_eval: Optional[int] = None,
-        tolerance_grad: float = 1e-07,
-        tolerance_change: float = 1e-09,
-        history_size: int = 100,
-        line_search_fn: Optional[str] = None,
-) -> Callable[[Union[Iterator[torch.Tensor], Iterator[Dict]]], torch.optim.Optimizer]:
-    def optimizer(params: Union[Iterator[torch.Tensor], Iterator[Dict]]) -> torch.optim.Optimizer:
-        return torch.optim.LBFGS(
-            params=params,
-            lr=lr,
-            max_iter=max_iter,
-            max_eval=max_eval,
-            tolerance_grad=tolerance_grad,
-            tolerance_change=tolerance_change,
-            history_size=history_size,
-            line_search_fn=line_search_fn,
-        )
+def least_p(A: np.ndarray, b: np.ndarray, p: float = 2.0) -> np.ndarray:
+    '''
+    Minimizer of ||Ax+b||_p^p
+    '''
+    if len(A.shape) != 2 or len(b.shape) != 1:
+        raise Exception("A must be 2D, b must be 1D")
 
-    return optimizer
+    m, n = A.shape
+
+    def f(x: np.ndarray) -> np.ndarray:
+        return A.__matmul__(x).__add__(b)
+
+    def objective(x: np.ndarray) -> float:
+        return float(np.sum(np.abs(f(x))))
+
+    def gradient(x: np.ndarray) -> np.ndarray:
+        fx = f(x)
+        return A.T.__matmul__(np.sign(fx).__mul__(np.abs(fx).__pow__(p - 1)).__mul__(p))
+
+    x0 = np.random.random(size=(n,))
+    solution = sp.optimize.minimize(objective, x0, method="L-BFGS-B", jac=gradient)
+    return solution.x

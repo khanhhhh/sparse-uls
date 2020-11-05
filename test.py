@@ -1,16 +1,13 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from sparse_uls.uls import solve
-
-from sparse_uls.util import lbfgs_optimizer
 n = 1000
 m = 200
 A = np.random.random(size=(m, n)).astype(dtype=np.float32)
-b = np.random.random(size=(m, 1)).astype(dtype=np.float32)
+b = np.random.random(size=(m)).astype(dtype=np.float32)
 
-
-x_norm2 = solve(A, b, 2, num_steps=100, optimizer=lbfgs_optimizer(lr=0.1))
-x_norm1 = solve(A, b, 1, num_steps=100, optimizer=lbfgs_optimizer(lr=0.1))
+x_norm2 = solve(A, b, 2)
+x_norm1 = solve(A, b, 1)
 
 
 def draw_hist(x: np.ndarray, title: str = "norm"):
