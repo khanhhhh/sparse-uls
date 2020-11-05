@@ -1,6 +1,7 @@
-from typing import Tuple
+from typing import Tuple, Optional, Callable, Union, Iterator, Dict
 
 import numpy as np
+import torch
 
 
 def linear_subspace(A: np.ndarray, b: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
@@ -16,3 +17,27 @@ def linear_subspace(A: np.ndarray, b: np.ndarray) -> Tuple[np.ndarray, np.ndarra
     R = R[0:p, :]
     x_ = Q1.__matmul__(np.linalg.inv(R.T).__matmul__(b))
     return x_, Q2
+
+
+def lbfgs_optimizer(
+        lr: float = 1,
+        max_iter: int = 20,
+        max_eval: Optional[int] = None,
+        tolerance_grad: float = 1e-07,
+        tolerance_change: float = 1e-09,
+        history_size: int = 100,
+        line_search_fn: Optional[str] = None,
+) -> Callable[[Union[Iterator[torch.Tensor], Iterator[Dict]]], torch.optim.Optimizer]:
+    def optimizer(params: Union[Iterator[torch.Tensor], Iterator[Dict]]) -> torch.optim.Optimizer:
+        return torch.optim.LBFGS(
+            params=params,
+            lr=lr,
+            max_iter=max_iter,
+            max_eval=max_eval,
+            tolerance_grad=tolerance_grad,
+            tolerance_change=tolerance_change,
+            history_size=history_size,
+            line_search_fn=line_search_fn,
+        )
+
+    return optimizer
