@@ -21,3 +21,10 @@ where   x \in R^n
 ### L1 norm sparsity
 
 ![norm1](https://raw.githubusercontent.com/khanhhhh/sparse-uls/main/assets/norm1.png)
+
+
+## Useful links
+
+- https://pypi.org/project/sparse-uls/
+
+- https://dzone.com/articles/executable-package-pip-install
