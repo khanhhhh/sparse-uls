@@ -1,9 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from uls import solve
+from sparse_uls.uls import solve
 
 # input
-from util import lbfgs_optimizer
+from sparse_uls.util import lbfgs_optimizer
 
 n = 1000
 m = 200

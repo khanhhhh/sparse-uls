@@ -3,7 +3,7 @@ from typing import Iterator, Dict, Callable, Union
 import numpy as np
 import torch
 
-from util import linear_subspace, lbfgs_optimizer
+from sparse_uls.util import linear_subspace, lbfgs_optimizer
 
 
 def solve(A: np.ndarray, b: np.ndarray, p: float = 1.0,
