@@ -39,7 +39,7 @@ Minimize y, get y = |x|_1
 
 ### L1.001 norm sparsity
 
-![norm1.001](https://raw.githubusercontent.com/khanhhhh/sparse-uls/main/assets/norm1.001.png)
+![norm1001](https://raw.githubusercontent.com/khanhhhh/sparse-uls/main/assets/norm1001.png)
 
 ### L1 norm sparsity
 
