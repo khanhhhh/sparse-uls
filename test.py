@@ -25,17 +25,13 @@ m = 200
 A = np.random.random(size=(m, n)).astype(dtype=np.float64)
 b = np.random.random(size=(m)).astype(dtype=np.float64)
 
-dp = 1
-div = 2
-while True:
-    p = 1 + dp
+for p in [1, 1.001, 1.5, 2.0]:
     t0 = time.time()
     x = solve(A, b, p)
     t1 = time.time()
     print(f"L^{p} time: {t1-t0}")
     print(f"\t{np.max(np.abs(A @ x - b))}")
     print(f"\t{norm_p(x, p) / x.shape[0]}")
-    draw_hist(x, f"L^{p} norm")
-    dp /= div
+    draw_hist(x, f"L^{p} norm", draw=True)
 
 pass

@@ -2,7 +2,7 @@ import setuptools
 
 setuptools.setup(
     name="sparse_uls",
-    version="2.2",
+    version="3.0",
     author="Nguyen Ngoc Khanh",
     author_email="nguyenngockhanh.pbc@gmail.com",
     description="optimize norm with underdetermined system equality constraint",

@@ -13,6 +13,9 @@ def solve(A: np.ndarray, b: np.ndarray, p: float = 1.0) -> np.ndarray:
     if len(A.shape) != 2 or len(b.shape) != 1:
         raise Exception("A must be 2D, b must be 1D")
 
+    if p == 1:
+        return solve_1(A, b)
+
     x_, Q2 = linear_subspace(A, b)
     z = least_p(Q2, x_, p)
     x = Q2.__matmul__(z).__add__(x_)
@@ -50,6 +53,7 @@ def solve_1(A: np.ndarray, b: np.ndarray) -> np.ndarray:
         b_ub=b_ub,
         A_eq=A_eq,
         b_eq=b_eq,
+        bounds=[(None, None) for _ in range(2*n)],
         method="interior-point",
     )
     print(solution.message)
