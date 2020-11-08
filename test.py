@@ -30,8 +30,8 @@ for p in [1, 1.001, 1.5, 2.0]:
     x = solve(A, b, p)
     t1 = time.time()
     print(f"L^{p} time: {t1-t0}")
-    print(f"\t{np.max(np.abs(A @ x - b))}")
-    print(f"\t{norm_p(x, p) / x.shape[0]}")
+    print(f"\tconstraints: {np.max(np.abs(A @ x - b))}")
+    print(f"\tL^p norm: {norm_p(x, p)}")
     draw_hist(x, f"L^{p} norm", draw=True)
 
 pass

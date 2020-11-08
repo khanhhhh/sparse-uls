@@ -37,6 +37,10 @@ Minimize y, get y = |x|_1
 
 ![norm2](https://raw.githubusercontent.com/khanhhhh/sparse-uls/main/assets/norm2.png)
 
+### L1.001 norm sparsity
+
+![norm1.001](https://raw.githubusercontent.com/khanhhhh/sparse-uls/main/assets/norm1.001.png)
+
 ### L1 norm sparsity
 
 ![norm1](https://raw.githubusercontent.com/khanhhhh/sparse-uls/main/assets/norm1.png)
