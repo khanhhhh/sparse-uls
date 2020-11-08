@@ -14,7 +14,7 @@ where   x \in R^n
 
 ## algorithm
 
-### unconstraint optimization
+### unconstrained optimization
 
 ```
 Let z \in R^{n-m} be an arbitrary vector.
