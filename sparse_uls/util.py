@@ -14,7 +14,7 @@ def linear_subspace(A: np.ndarray, b: np.ndarray) -> Tuple[np.ndarray, np.ndarra
     if len(A.shape) != 2 or len(b.shape) != 1:
         raise Exception("A must be 2D, b must be 1D")
     p, n = A.shape
-    Q, R = np.linalg.qr(A.T, mode="complete")
+    Q, R = sp.linalg.qr(A.T, mode="full")
     Q1, Q2 = Q[:, 0:p], Q[:, p:n]
     R = R[0:p, :]
     x_ = Q1.__matmul__(np.linalg.inv(R.T).__matmul__(b))
