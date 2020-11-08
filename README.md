@@ -22,6 +22,14 @@ where   x \in R^n
 
 ![norm1](https://raw.githubusercontent.com/khanhhhh/sparse-uls/main/assets/norm1.png)
 
+## Packaging
+
+```bash
+rm -rf dist/*
+python setup.py sdist bdist_wheel
+twine upload dist/*
+```
+
 
 ## Useful links
 
