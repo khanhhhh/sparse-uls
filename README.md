@@ -12,6 +12,25 @@ where   x \in R^n
         p \in R_+
 ```
 
+## algorithm
+
+### unconstraint optimization
+
+```
+Let z \in R^{n-m} be an arbitrary vector.
+Represent the solution of Ax=b by x = A* z + b* // see boyd convex optimization
+The problem becomes minimizing ||A*z + b*||_p
+```
+
+### linear programming (L1 norm)
+
+```
+Let y \in R^{n} with 2 additional constraints
+y \geq x and y \geq -x
+Let u = [x, y] \in R^{2n}, the feasible set is a polyhydron.
+Minimize y, get y = |x|_1
+```
+
 ## results
 
 ### L2 norm sparsity
@@ -34,6 +53,8 @@ twine upload dist/*
 ## Useful links
 
 - https://pypi.org/project/sparse-uls/
+
+- https://web.stanford.edu/~boyd/cvxbook/bv_cvxbook.pdf (page 682)
 
 - https://packaging.python.org/tutorials/packaging-projects/
 
