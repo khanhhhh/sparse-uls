@@ -26,9 +26,9 @@ The problem becomes minimizing ||A*z + b*||_p
 
 ```
 Let y \in R^{n} with 2 additional constraints
-y \geq x and y \geq -x
+y \geq x and y \geq -x (element-wise)
 Let u = [x, y] \in R^{2n}, the feasible set is a polyhydron.
-Minimize y, get y = |x|_1
+Minimize y, get x
 ```
 
 ## results
