@@ -20,10 +20,13 @@ def norm_p(x: np.ndarray, p: float=2.0) -> float:
 
 n = 1000
 m = 200
-A = np.random.random(size=(m, n)).astype(dtype=np.float32)
-b = np.random.random(size=(m)).astype(dtype=np.float32)
+A = np.random.random(size=(m, n)).astype(dtype=np.float64)
+b = np.random.random(size=(m)).astype(dtype=np.float64)
 
-for p in [0.5, 1, 2]:
+dp = 1
+div = 2
+while True:
+    p = 1 + dp
     t0 = time.time()
     x = solve(A, b, p)
     t1 = time.time()
@@ -31,5 +34,6 @@ for p in [0.5, 1, 2]:
     print(f"\t{np.max(np.abs(A @ x - b))}")
     print(f"\t{norm_p(x, p) / x.shape[0]}")
     draw_hist(x, f"L^{p} norm")
+    dp /= div
 
 pass

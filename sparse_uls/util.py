@@ -40,6 +40,9 @@ def least_p(A: np.ndarray, b: np.ndarray, p: float = 2.0) -> np.ndarray:
         fx = f(x)
         return A.T.__matmul__(np.sign(fx).__mul__(np.abs(fx).__pow__(p - 1)).__mul__(p))
 
-    x0 = np.random.random(size=(n,))
-    solution = sp.optimize.minimize(objective, x0, method="L-BFGS-B", jac=gradient)
+    def hessian(x: np.ndarray) -> np.ndarray:
+        return A.T.__matmul__(A).__mul__(p * (p-1))
+
+    x0 = np.zeros(shape=(n,))
+    solution = sp.optimize.minimize(objective, x0, method="Newton-CG", jac=gradient, hess=hessian)
     return solution.x
