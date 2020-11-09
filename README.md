@@ -25,10 +25,17 @@ The problem becomes minimizing ||A*z + b*||_p
 ### linear programming (L_1 norm)
 
 ```
+# idea
 Let y \in R^{n} with 2 additional constraints
 y \geq x and y \geq -x (element-wise)
-Let u = [x, y] \in R^{2n}, the feasible set is a polyhydron.
-Minimize y, get x
+Let u = [x, y] \in R^{2n}, the feasible set is a polyhedron.
+Minimize sum of y, get x
+
+# explanation
+y \geq x and y \geq -x constraint y \geq |x|
+Let u1 = [x1, y1] be the minimizer.
+It is easy to prove that minimal y, y1 = |x1|
+Hence, the LP formulation yeilds the same solution as the original problem.
 ```
 
 ## results
