@@ -38,7 +38,7 @@ It is easy to prove that minimal y, y1 = |x1|
 Hence, the LP formulation yeilds the same solution as the original problem.
 ```
 
-## results
+## results (m = 400, n = 2000, random A b)
 
 ### L2 norm sparsity
 
