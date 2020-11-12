@@ -1,6 +1,9 @@
+from enum import Enum
+
 import numpy as np
 
-from sparse_uls.util import linear_subspace, least_p, glpk_linprog
+from sparse_uls.lp import scipy_linprog, octave_linprog, glpk_linprog
+from sparse_uls.util import linear_subspace, least_p
 
 
 def solve(A: np.ndarray, b: np.ndarray, p: float = 1.0) -> np.ndarray:
@@ -20,7 +23,12 @@ def solve(A: np.ndarray, b: np.ndarray, p: float = 1.0) -> np.ndarray:
     return x
 
 
-def solve_1(A: np.ndarray, b: np.ndarray) -> np.ndarray:
+class LPmethod(Enum):
+    GLPK = 0
+    OCTAVE = 1
+    SCIPY = 2
+
+def solve_1(A: np.ndarray, b: np.ndarray, method: LPmethod=LPmethod.GLPK) -> np.ndarray:
     '''
     Minimizer of ||Ax+b||_1 using linear programming
     '''
@@ -45,11 +53,33 @@ def solve_1(A: np.ndarray, b: np.ndarray) -> np.ndarray:
     A_eq[:, n:2 * n] = 0
     b_eq = b
 
-    x1 = glpk_linprog(
-        c=c,
-        A=A_,
-        b_ub=b_ub,
-        A_eq=A_eq,
-        b_eq=b_eq,
-    )
-    return x1[0:n]
+    if method == LPmethod.GLPK:
+        x1 = glpk_linprog(
+            c=c,
+            A=A_,
+            b_ub=b_ub,
+            A_eq=A_eq,
+            b_eq=b_eq,
+        )
+        return x1[0:n]
+
+    if method == LPmethod.OCTAVE:
+        x1 = octave_linprog(
+            c=c,
+            A_ub=A_,
+            b_ub=b_ub,
+            A_eq=A_eq,
+            b_eq=b_eq,
+        )
+        return x1[0:n]
+
+    if method == LPmethod.SCIPY:
+        x1 = scipy_linprog(
+            c=c,
+            A_ub=A_,
+            b_ub=b_ub,
+            A_eq=A_eq,
+            b_eq=b_eq,
+            bounds=[(None, None) for _ in range(2*n)],
+        )
+        return x1[0:n]
