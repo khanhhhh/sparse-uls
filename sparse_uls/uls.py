@@ -14,6 +14,11 @@ def solve(A: np.ndarray, b: np.ndarray, p: float = 1.0) -> np.ndarray:
     if len(A.shape) != 2 or len(b.shape) != 1:
         raise Exception("A must be 2D, b must be 1D")
 
+    m, n = A.shape
+
+    if not (m < n):
+        raise Exception("System must be underdetermined (m < n)")
+
     if p == 1:
         return solve_1(A, b)
 
@@ -28,7 +33,8 @@ class LPmethod(Enum):
     OCTAVE = 1
     SCIPY = 2
 
-def solve_1(A: np.ndarray, b: np.ndarray, method: LPmethod=LPmethod.GLPK) -> np.ndarray:
+
+def solve_1(A: np.ndarray, b: np.ndarray, method: LPmethod = LPmethod.GLPK) -> np.ndarray:
     '''
     Minimizer of ||Ax+b||_1 using linear programming
     '''
@@ -36,6 +42,9 @@ def solve_1(A: np.ndarray, b: np.ndarray, method: LPmethod=LPmethod.GLPK) -> np.
         raise Exception("A must be 2D, b must be 1D")
 
     m, n = A.shape
+
+    if not (m < n):
+        raise Exception("System must be underdetermined (m < n)")
 
     A_ = np.empty(shape=(2 * n, 2 * n))
     A_[0:n, 0:n] = +np.identity(n)
@@ -80,6 +89,6 @@ def solve_1(A: np.ndarray, b: np.ndarray, method: LPmethod=LPmethod.GLPK) -> np.
             b_ub=b_ub,
             A_eq=A_eq,
             b_eq=b_eq,
-            bounds=[(None, None) for _ in range(2*n)],
+            bounds=[(None, None) for _ in range(2 * n)],
         )
         return x1[0:n]
