@@ -10,6 +10,7 @@ def solve_homopoly(A: np.ndarray, b: np.ndarray, p: float = 2.0) -> np.ndarray:
     '''
     Minimizer of ||x||_p^p
     Given Ax=b
+    By minimizing ||Ax-b||_2^2 + ||x||_p^p
     '''
     if len(A.shape) != 2 or len(b.shape) != 1:
         raise Exception("A must be 2D, b must be 1D")
