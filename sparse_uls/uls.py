@@ -1,8 +1,9 @@
-from enum import Enum
+from typing import Set
 
 import numpy as np
 import scipy as sp
 import scipy.optimize
+
 from sparse_uls.lp import scipy_linprog, octave_linprog, glpk_linprog
 
 
@@ -21,11 +22,10 @@ def solve_homopoly(A: np.ndarray, b: np.ndarray, p: float = 2.0) -> np.ndarray:
         raise Exception("System must be underdetermined (m < n)")
 
     def objective(x: np.ndarray) -> np.ndarray:
-        return np.sum((A.__matmul__(x).__sub__(b)).__pow__(2)).__add__(np.sum(np.abs(x).__pow__(p)))
+        return np.sum((A @ x - b) ** 2) + np.sum(np.abs(x) ** p)
 
     def gradient(x: np.ndarray) -> np.ndarray:
-        y = A.__matmul__(x).__sub__(b)
-        return A.T.__matmul__(y).__mul__(2).__add__(np.sign(x).__mul__(np.abs(x).__pow__(p-1)).__mul__(p))
+        return 2 * A.T @ (A @ x - b) + p * np.sign(x) * np.abs(x) ** (p - 1)
 
     x0 = np.zeros(shape=(n,))
     solution = sp.optimize.minimize(objective, x0, method="L-BFGS-B", jac=gradient)
@@ -50,13 +50,15 @@ def solve(A: np.ndarray, b: np.ndarray, p: float = 1.0) -> np.ndarray:
 
     return solve_homopoly(A, b, p)
 
-class LPmethod(Enum):
-    GLPK = 0
-    OCTAVE = 1
-    SCIPY = 2
+
+lp_method: Set[str] = {
+    "GLPK",
+    "OCTAVE",
+    "SCIPY",
+}
 
 
-def solve_1(A: np.ndarray, b: np.ndarray, method: LPmethod = LPmethod.GLPK) -> np.ndarray:
+def solve_1(A: np.ndarray, b: np.ndarray, method: str = "GLPK") -> np.ndarray:
     '''
     Minimizer of ||Ax+b||_1 using linear programming
     '''
@@ -84,7 +86,7 @@ def solve_1(A: np.ndarray, b: np.ndarray, method: LPmethod = LPmethod.GLPK) -> n
     A_eq[:, n:2 * n] = 0
     b_eq = b
 
-    if method == LPmethod.GLPK:
+    if method == "GLPK":
         x1 = glpk_linprog(
             c=c,
             A=A_,
@@ -94,7 +96,7 @@ def solve_1(A: np.ndarray, b: np.ndarray, method: LPmethod = LPmethod.GLPK) -> n
         )
         return x1[0:n]
 
-    if method == LPmethod.OCTAVE:
+    if method == "OCTAVE":
         x1 = octave_linprog(
             c=c,
             A_ub=A_,
@@ -104,7 +106,7 @@ def solve_1(A: np.ndarray, b: np.ndarray, method: LPmethod = LPmethod.GLPK) -> n
         )
         return x1[0:n]
 
-    if method == LPmethod.SCIPY:
+    if method == "SCIPY":
         x1 = scipy_linprog(
             c=c,
             A_ub=A_,
@@ -114,3 +116,5 @@ def solve_1(A: np.ndarray, b: np.ndarray, method: LPmethod = LPmethod.GLPK) -> n
             bounds=[(None, None) for _ in range(2 * n)],
         )
         return x1[0:n]
+
+    raise Exception(f"lp method not available: see {lp_method}")
