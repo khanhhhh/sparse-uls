@@ -3,6 +3,7 @@ from typing import Set
 import numpy as np
 import scipy as sp
 import scipy.optimize
+from sparse_uls.util import linear_subspace, least_p
 
 from sparse_uls.lp import scipy_linprog, octave_linprog, glpk_linprog
 
@@ -45,10 +46,11 @@ def solve(A: np.ndarray, b: np.ndarray, p: float = 1.0) -> np.ndarray:
     if not (m < n):
         raise Exception("System must be underdetermined (m < n)")
 
-    if p == 1:
-        return solve_1(A, b)
+    x_, Q2 = linear_subspace(A, b)
+    z = least_p(Q2, x_, p)
+    x = Q2 @ z + x_
+    return x
 
-    return solve_homopoly(A, b, p)
 
 
 lp_method: Set[str] = {
@@ -58,7 +60,7 @@ lp_method: Set[str] = {
 }
 
 
-def solve_1(A: np.ndarray, b: np.ndarray, method: str = "GLPK") -> np.ndarray:
+def solve_l1(A: np.ndarray, b: np.ndarray, method: str = "GLPK") -> np.ndarray:
     '''
     Minimizer of ||Ax+b||_1 using linear programming
     '''
