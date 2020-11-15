@@ -25,7 +25,7 @@ m = 200
 A = np.random.random(size=(m, n)).astype(dtype=np.float64)
 b = np.random.random(size=(m)).astype(dtype=np.float64)
 
-for p in [1, 1.001, 1.5, 2.0]:
+for p in [1, 1.0000000000000000000001, 1.001, 1.5, 2.0]:
     t0 = time.time()
     x = solve(A, b, p)
     t1 = time.time()
