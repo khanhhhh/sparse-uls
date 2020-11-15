@@ -2,7 +2,7 @@ import time
 
 import numpy as np
 import matplotlib.pyplot as plt
-from sparse_uls.uls import solve, solve_homopoly
+from sparse_uls.uls import solve, solve_homopoly, solve_l1
 
 np.random.seed(1234)
 
@@ -25,9 +25,12 @@ m = 200
 A = np.random.random(size=(m, n)).astype(dtype=np.float64)
 b = np.random.random(size=(m)).astype(dtype=np.float64)
 
-for p in [1, 1 + 1e-318, 1.5, 2.0]:
+for p in [1, 1.000001, 1.5, 2.0]:
     t0 = time.time()
-    x = solve(A, b, p)
+    if p == 1:
+        x = solve_l1(A, b)
+    else:
+        x = solve_homopoly(A, b, p)
     t1 = time.time()
     print(f"L^{p} time: {t1-t0}")
     print(f"\tconstraints: {np.max(np.abs(A @ x - b))}")

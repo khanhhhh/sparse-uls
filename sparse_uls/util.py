@@ -17,7 +17,7 @@ def linear_subspace(A: np.ndarray, b: np.ndarray) -> Tuple[np.ndarray, np.ndarra
     Q, R = sp.linalg.qr(A.T, mode="full")
     Q1, Q2 = Q[:, 0:p], Q[:, p:n]
     R = R[0:p, :]
-    x_ = Q1.__matmul__(np.linalg.inv(R.T).__matmul__(b))
+    x_ = Q1 @ (np.linalg.inv(R.T) @ b)
     return x_, Q2
 
 
@@ -38,7 +38,7 @@ def least_p(A: np.ndarray, b: np.ndarray, p: float = 2.0) -> np.ndarray:
 
     def gradient(x: np.ndarray) -> np.ndarray:
         fx = f(x)
-        return A.T @ (p * np.sign(fx) * np.abs(fx ** (p-1)))
+        return A.T @ (p * np.sign(fx) * np.abs(fx) ** (p-1))
 
     def hessian(x: np.ndarray) -> np.ndarray:
         return A.T.__matmul__(A).__mul__(p * (p-1))
