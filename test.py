@@ -2,7 +2,7 @@ import time
 
 import numpy as np
 import matplotlib.pyplot as plt
-from sparse_uls.uls import solve
+from sparse_uls.uls import solve, solve_homopoly
 
 np.random.seed(1234)
 

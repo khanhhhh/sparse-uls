@@ -17,9 +17,7 @@ where   x \in R^n
 ### unconstrained optimization (L_p norm, p > 1)
 
 ```
-Let z \in R^{n-m} be an arbitrary vector.
-Represent the solution of Ax=b by x = A* z + b* // see boyd convex optimization
-The problem becomes minimizing ||A*z + b*||_p
+Minimize ||Ax-b||_2^2 + ||x||_p^p
 ```
 
 ### linear programming (L_1 norm)

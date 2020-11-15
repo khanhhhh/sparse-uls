@@ -1,9 +1,34 @@
 from enum import Enum
 
 import numpy as np
-
+import scipy as sp
+import scipy.optimize
 from sparse_uls.lp import scipy_linprog, octave_linprog, glpk_linprog
-from sparse_uls.util import linear_subspace, least_p
+
+
+def solve_homopoly(A: np.ndarray, b: np.ndarray, p: float = 2.0) -> np.ndarray:
+    '''
+    Minimizer of ||x||_p^p
+    Given Ax=b
+    '''
+    if len(A.shape) != 2 or len(b.shape) != 1:
+        raise Exception("A must be 2D, b must be 1D")
+
+    m, n = A.shape
+
+    if not (m < n):
+        raise Exception("System must be underdetermined (m < n)")
+
+    def objective(x: np.ndarray) -> np.ndarray:
+        return np.sum((A.__matmul__(x).__sub__(b)).__pow__(2)).__add__(np.sum(np.abs(x).__pow__(p)))
+
+    def gradient(x: np.ndarray) -> np.ndarray:
+        y = A.__matmul__(x).__sub__(b)
+        return A.T.__matmul__(y).__mul__(2).__add__(np.sign(x).__mul__(np.abs(x).__pow__(p-1)).__mul__(p))
+
+    x0 = np.zeros(shape=(n,))
+    solution = sp.optimize.minimize(objective, x0, method="L-BFGS-B", jac=gradient)
+    return solution.x
 
 
 def solve(A: np.ndarray, b: np.ndarray, p: float = 1.0) -> np.ndarray:
@@ -22,11 +47,7 @@ def solve(A: np.ndarray, b: np.ndarray, p: float = 1.0) -> np.ndarray:
     if p == 1:
         return solve_1(A, b)
 
-    x_, Q2 = linear_subspace(A, b)
-    z = least_p(Q2, x_, p)
-    x = Q2.__matmul__(z).__add__(x_)
-    return x
-
+    return solve_homopoly(A, b, p)
 
 class LPmethod(Enum):
     GLPK = 0
