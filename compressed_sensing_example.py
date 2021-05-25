@@ -2,6 +2,7 @@ from typing import Callable
 
 import matplotlib.pyplot as plt
 import numpy as np
+
 import sparse_uls
 
 np.random.seed(1234)

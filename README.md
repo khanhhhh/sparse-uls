@@ -1,4 +1,5 @@
 # sparsest-solution-underdetermined-linear-system
+
 optimize norm with underdetermined system equality constraint
 
 ## problem statement
@@ -25,7 +26,6 @@ Let z \in R^{n-m} be an arbitrary vector.
 Represent the solution of Ax=b by x = A* z + b* // see boyd convex optimization
 The problem becomes minimizing ||A*z + b*||_p
 ```
-
 
 ### linear programming (L_1 norm)
 
@@ -65,7 +65,6 @@ python setup.py sdist bdist_wheel
 twine upload dist/*
 
 ```
-
 
 ## Useful links
 

@@ -4,7 +4,6 @@ import glpk
 import numpy as np
 import scipy as sp
 import scipy.optimize
-from oct2py import octave
 
 
 def scipy_linprog(
@@ -15,9 +14,9 @@ def scipy_linprog(
         b_eq: Optional[np.ndarray] = None,
         bounds: Optional[List[Tuple[Optional[float], Optional[float]]]] = None,
 ) -> np.ndarray:
-    '''
+    """
     interior-point
-    '''
+    """
     solution = sp.optimize.linprog(
         c=c,
         A_ub=A_ub,
@@ -29,24 +28,6 @@ def scipy_linprog(
     return solution.x
 
 
-def octave_linprog(
-        c: np.ndarray,
-        A_ub: Optional[np.ndarray] = None,
-        b_ub: Optional[np.ndarray] = None,
-        A_eq: Optional[np.ndarray] = None,
-        b_eq: Optional[np.ndarray] = None,
-) -> np.ndarray:
-    '''
-    simplex
-    '''
-    octave.eval("pkg load optim")
-    c_ = c.reshape((c.shape[0], 1))
-    b_ub_ = b_ub.reshape((b_ub.shape[0], 1))
-    b_eq_ = b_eq.reshape((b_eq.shape[0], 1))
-    x1_ = octave.linprog(c_, A_ub, b_ub_, A_eq, b_eq_)
-    x1 = x1_.reshape((x1_.shape[0],))
-    return x1
-
 def glpk_linprog(
         c: np.ndarray,
         A: Optional[np.ndarray] = None,
@@ -56,18 +37,18 @@ def glpk_linprog(
         b_eq: Optional[np.ndarray] = None,
         bounds: Optional[List[Tuple[Optional[float], Optional[float]]]] = None,
 ) -> np.ndarray:
-    '''
+    """
     simplex
     Solving linear program as follow:
         minimize c^T x
         given b_lb <= A x <= b_ub and A_eq x = b_eq
     bounds is a list of pair (lb, ub) such as lb[i] < x[i] < ub[i]
-    '''
+    """
     num_variables = c.shape[0]
     if A is None:
         A = np.empty(shape=(0, num_variables))
-        b_lb = np.empty(shape=(0, ))
-        b_ub = np.empty(shape=(0, ))
+        b_lb = np.empty(shape=(0,))
+        b_ub = np.empty(shape=(0,))
     else:
         if b_lb is None:
             b_lb = [None for _ in range(num_variables)]
@@ -75,10 +56,9 @@ def glpk_linprog(
             b_ub = [None for _ in range(num_variables)]
     if A_eq is None:
         A_eq = np.empty(shape=(0, num_variables))
-        b_eq = np.empty(shape=(0, ))
+        b_eq = np.empty(shape=(0,))
     if bounds is None:
         bounds = [(None, None) for _ in range(num_variables)]
-
 
     num_ineq_constraints = A.shape[0]
     num_eq_constraints = A_eq.shape[0]
@@ -102,4 +82,3 @@ def glpk_linprog(
 
     x = np.array([col.primal for col in lp.cols])
     return x
-
