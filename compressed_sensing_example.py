@@ -110,7 +110,7 @@ K = 2 * N
 fourier = forward_transform(N, K)
 inverse_fourier = backward_transform(K, N)
 
-p = 0.1
+p = 0.3
 sensing_mat = sensing(p, N)
 measure = sensing_mat @ f
 
